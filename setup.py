@@ -39,15 +39,11 @@ setup(
     zip_safe=False,
     install_requires=[
         # -*- Extra requirements: -*-
-        'plone.api>=1.8.4',
-        'Products.GenericSetup>=1.8.2',
+        'plone.api',
+        'imio.restapi',
+        'Products.GenericSetup',
         'setuptools',
         'z3c.jbot',
-        'plone.app.dexterity<=2.1.1',
-        'plone.app.referenceablebehavior',
-        'plone.app.relationfield',
-        'plone.app.lockingbehavior',
-        'plone.schema',
     ],
     extras_require={
         'test': [
@@ -55,8 +51,7 @@ setup(
             # Plone KGS does not use this version, because it would break
             # Remove if your package shall be part of coredev.
             # plone_coredev tests as of 2016-04-01.
-            'plone.testing>=5.0.0',
-            'plone.app.robotframework[debug]',
+            'plone.testing',
         ],
     },
     entry_points="""
