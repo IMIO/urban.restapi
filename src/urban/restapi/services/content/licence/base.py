@@ -2,6 +2,8 @@
 
 from imio.restapi.services import add
 
+from plone import api
+
 from plone.restapi.deserializer import json_body
 
 from urban.restapi.exceptions import UndefinedPortalType
@@ -19,6 +21,8 @@ class AddLicencePost(add.FolderPost):
         data = json_body(self.request)
         data = self.set_portal_type(data)
         data = self.set_creation_place(data)
+        if not('foldermanagers' in data and data['foldermanagers']):
+            data = self.set_default_foldermanager(data)
         self.request.set('BODY', json.dumps(data))
         result = super(AddLicencePost, self).reply()
         return result
@@ -38,5 +42,21 @@ class AddLicencePost(add.FolderPost):
         self.context = licence_folder
         return data
 
-    def set_default_foldermanager(self):
+    def set_default_foldermanager(self, data):
         """ """
+        portal_urban = api.portal.get_tool('portal_urban')
+        for licence_config in portal_urban.objectValues('LicenceConfig'):
+                if licence_config.id == data.get('@type').lower():
+                    default_foldermanagers_uids = [foldermanager.UID()
+                                                   for foldermanager in licence_config.getDefault_foldermanager()]
+                    data['foldermanagers'] = default_foldermanagers_uids
+
+        if not data['foldermanagers']:
+            raise DefaultFolderManagerNotFoundError(["No default foldermanager for this licence type"])
+        return data
+
+
+class DefaultFolderManagerNotFoundError(RuntimeError):
+
+    def __init__(self, arg):
+        self.args = arg
