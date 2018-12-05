@@ -46,10 +46,10 @@ class AddLicencePost(add.FolderPost):
         """ """
         portal_urban = api.portal.get_tool('portal_urban')
         for licence_config in portal_urban.objectValues('LicenceConfig'):
-                if licence_config.id == data.get('@type').lower():
-                    default_foldermanagers_uids = [foldermanager.UID()
-                                                   for foldermanager in licence_config.getDefault_foldermanager()]
-                    data['foldermanagers'] = default_foldermanagers_uids
+            if licence_config.id == data.get('@type').lower():
+                default_foldermanagers_uids = [foldermanager.UID()
+                                               for foldermanager in licence_config.getDefault_foldermanager()]
+                data['foldermanagers'] = default_foldermanagers_uids
 
         if not data['foldermanagers']:
             raise DefaultFolderManagerNotFoundError(["No default foldermanager for this licence type"])
