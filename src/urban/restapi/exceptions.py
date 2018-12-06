@@ -18,3 +18,10 @@ class EnvironmentRubricNotFound(UrbanRestAPIError):
     Raised when no corresponding environment rubric is found
     in urban.
     """
+
+
+class DefaultFolderManagerNotFoundError(UrbanRestAPIError):
+    """
+    Raised when no default foldermanager for this licence type is found
+    in urban.
+    """
