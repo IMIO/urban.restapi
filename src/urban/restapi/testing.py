@@ -5,6 +5,7 @@ from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
+from plone.restapi.testing import PLONE_RESTAPI_AT_FUNCTIONAL_TESTING
 from plone.testing import z2
 
 import urban.restapi
@@ -36,7 +37,7 @@ URBAN_RESTAPI_INTEGRATION_TESTING = IntegrationTesting(
 
 
 URBAN_RESTAPI_FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(URBAN_RESTAPI_FIXTURE,),
+    bases=(URBAN_RESTAPI_FIXTURE, PLONE_RESTAPI_AT_FUNCTIONAL_TESTING),
     name='UrbanRestapiLayer:FunctionalTesting',
 )
 
