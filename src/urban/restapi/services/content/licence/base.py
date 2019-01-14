@@ -58,6 +58,7 @@ class AddLicencePost(add.FolderPost):
 
     def set_location_uids(self, data):
         """ """
+        data = self.initialize_description_field(data)
         catalog = api.portal.get_tool("uid_catalog")
         results = catalog.searchResults(**{'portal_type': 'Street'})
         if 'workLocations' in data and data['workLocations']:
@@ -67,6 +68,15 @@ class AddLicencePost(add.FolderPost):
                         if data['workLocations'][idx]['street_ins'] == result.getObject().getStreetCode():
                             data['workLocations'][idx]['street'] = result.getObject().UID()
                             break
+                else:
+
+                    data['description']['data'] += ("<p>Situation : %s %s %s %s</p>" %
+                                                    (
+                                                        data['workLocations'][idx]['number'],
+                                                        data['workLocations'][idx]['street'],
+                                                        data['workLocations'][idx]['cp'],
+                                                        data['workLocations'][idx]['localite']
+                                                    ))
 
         if 'businessOldLocation' in data and data['businessOldLocation']:
             for idx, business_old_location in enumerate(data['businessOldLocation']):
@@ -75,4 +85,21 @@ class AddLicencePost(add.FolderPost):
                         if data['businessOldLocation'][idx]['street_ins'] == result.getObject().getStreetCode():
                             data['businessOldLocation'][idx]['street'] = result.getObject().UID()
                             break
+                else:
+                    data['description']['data'] += ("<p>Ancienne adresse de l'exploitation : %s %s %s %s</p>" %
+                                                    (
+                                                        data['workLocations'][idx]['number'],
+                                                        data['workLocations'][idx]['street'],
+                                                        data['workLocations'][idx]['cp'],
+                                                        data['workLocations'][idx]['localite']
+                                                    ))
+        return data
+
+    def initialize_description_field(self, data):
+        if 'description' not in data:
+            data['description'] = {}
+        if 'data' not in data['description']:
+            data['description']['data'] = ""
+        if 'content-type' not in data['description']:
+            data['description']['content-type'] = "text/html"
         return data
