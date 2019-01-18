@@ -11,4 +11,20 @@
     permission="cmf.AddPortalContent"
     />
 
+  <plone:service
+    method="POST"
+    name="@codt_buildlicence"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".codt_buildlicence.AddCodtBuildLicencePost"
+    permission="cmf.AddPortalContent"
+    />
+
+  <plone:service
+    method="POST"
+    name="@codt_parceloutlicence"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".codt_parceloutlicence.AddCodtParcelOutLicencePost"
+    permission="cmf.AddPortalContent"
+    />
+
 </configure>
