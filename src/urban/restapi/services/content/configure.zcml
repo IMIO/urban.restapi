@@ -4,5 +4,6 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <include package=".licence" />
+  <include package=".contact" />
 
 </configure>
