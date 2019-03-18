@@ -10,7 +10,7 @@ from urban.restapi.exceptions import UndefinedPortalType, DefaultFolderManagerNo
 
 from Products.urban.utils import getLicenceFolder
 
-import json, re
+import json
 
 
 class AddLicencePost(add.FolderPost):
@@ -18,14 +18,15 @@ class AddLicencePost(add.FolderPost):
     portal_type = ''  # to override in subclasses
 
     def reply(self):
-        data = json_body(self.request)
-        data = self.set_portal_type(data)
-        data = self.set_creation_place(data)
-        data = self.set_default_foldermanager(data)
-        data = self.set_location_uids(data)
-        data = self.set_events(data)
-        data = self.set_contacts(data)
-        self.request.set('BODY', json.dumps(data))
+        licence = json_body(self.request)
+        licence = self.initialize_description_field(licence)
+        licence = self.set_portal_type(licence)
+        licence = self.set_creation_place(licence)
+        licence = self.set_default_foldermanager(licence)
+        licence = self.set_location_uids(licence)
+        licence = self.set_events(licence)
+        licence = self.set_contacts(licence)
+        self.request.set('BODY', json.dumps(licence))
         result = super(AddLicencePost, self).reply()
         return result
 
@@ -60,7 +61,6 @@ class AddLicencePost(add.FolderPost):
 
     def set_location_uids(self, data):
         """ """
-        data = self.initialize_description_field(data)
         catalog = api.portal.get_tool("uid_catalog")
         results = catalog.searchResults(**{'portal_type': 'Street'})
         if 'workLocations' in data and data['workLocations']:
@@ -71,13 +71,14 @@ class AddLicencePost(add.FolderPost):
                             data['workLocations'][idx]['street'] = result.getObject().UID()
                             break
                 else:
-
+                    zipcode = data['workLocations'][idx]['zipcode'] if 'zipcode' in data['workLocations'][idx] else ""
+                    localite = data['workLocations'][idx]['localite'] if 'localite' in data['workLocations'][idx] else ""
                     data['description']['data'] += ("<p>Situation : %s %s %s %s</p>" %
                                                     (
                                                         data['workLocations'][idx]['number'],
                                                         data['workLocations'][idx]['street'],
-                                                        data['workLocations'][idx]['cp'],
-                                                        data['workLocations'][idx]['localite']
+                                                        zipcode,
+                                                        localite
                                                     ))
 
         if 'businessOldLocation' in data and data['businessOldLocation']:
@@ -88,24 +89,29 @@ class AddLicencePost(add.FolderPost):
                             data['businessOldLocation'][idx]['street'] = result.getObject().UID()
                             break
                 else:
+                    zipcode = data['businessOldLocation'][idx]['zipcode'] \
+                        if 'zipcode' in data['businessOldLocation'][idx] else ""
+                    localite = data['businessOldLocation'][idx]['localite'] \
+                        if 'localite' in data['businessOldLocation'][idx] else ""
                     data['description']['data'] += ("<p>Ancienne adresse de l'exploitation : %s %s %s %s</p>" %
                                                     (
-                                                        data['workLocations'][idx]['number'],
-                                                        data['workLocations'][idx]['street'],
-                                                        data['workLocations'][idx]['cp'],
-                                                        data['workLocations'][idx]['localite']
+                                                        data['businessOldLocation'][idx]['number'],
+                                                        data['businessOldLocation'][idx]['street'],
+                                                        zipcode,
+                                                        localite
                                                     ))
         return data
 
     def set_events(self, data):
         """ """
-        for idx, child in enumerate(data['__children__']):
-            if child['@type'] == 'UrbanEvent':
-                if child['event_id'] and 'urbaneventtypes' not in child:
-                    data['__children__'][idx]['urbaneventtypes'] = "{0}/portal_urban/{1}/urbaneventtypes/{2}".format(
-                        api.portal.getSite().absolute_url(),
-                        self.portal_type.lower(),
-                        child['event_id']
+        if '__children__' in data:
+            for idx, child in enumerate(data['__children__']):
+                if child['@type'] == 'UrbanEvent':
+                    if child['event_id'] and 'urbaneventtypes' not in child:
+                        data['__children__'][idx]['urbaneventtypes'] = "{0}/portal_urban/{1}/urbaneventtypes/{2}".format(
+                            api.portal.getSite().absolute_url(),
+                            self.portal_type.lower(),
+                            child['event_id']
                     )
         return data
 
@@ -200,4 +206,5 @@ class AddLicencePost(add.FolderPost):
             data['description']['data'] = ""
         if 'content-type' not in data['description']:
             data['description']['content-type'] = "text/html"
+
         return data

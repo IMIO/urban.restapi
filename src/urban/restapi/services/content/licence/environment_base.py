@@ -12,9 +12,10 @@ class AddLicencePost(base.AddLicencePost):
 
     def reply(self):
         data = json_body(self.request)
-        new_data = self.set_rubrics(data)
-        self.request.set('BODY', json.dumps(new_data))
-        result = super(AddLicencePost, self).reply()
+        for licence in data['__children__']:
+            new_data = self.set_rubrics(licence)
+            self.request.set('BODY', json.dumps(new_data))
+            result = super(AddLicencePost, self).reply()
         return result
 
     def set_rubrics(self, data):
