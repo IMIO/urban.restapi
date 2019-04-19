@@ -5,7 +5,7 @@ import json
 
 from plone.restapi.deserializer import json_body
 from urban.restapi.services.content.esb import base
-from urban.restapi.services.content.utils import set_rubrics
+from urban.restapi.services.content.utils import set_rubrics, set_location
 
 
 class AddEsbEnvClassThreePost(base.AddLicencePost):
@@ -50,6 +50,18 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                         rubrics_list.append(item['numRubrique'])
                     licence['rubrics'] = rubrics_list
                     set_rubrics(self, licence)
+                if 'adresse' in envclass3_json['etablissement']:
+                    worklocation_dict = self.get_work_locations_dict()
+                    worklocation_dict['zipcode'] = envclass3_json['etablissement']['adresse']['cp']
+                    worklocation_dict['localite'] = envclass3_json['etablissement']['adresse']['localite']
+                    if 'rue' in envclass3_json['etablissement']['adresse']:
+                        worklocation_dict['street'] = envclass3_json['etablissement']['adresse']['rue']
+                    if 'numero' in envclass3_json['etablissement']['adresse']:
+                        worklocation_dict['number'] = envclass3_json['etablissement']['adresse']['numero']
+                    if 'boite' in envclass3_json['etablissement']['adresse']:
+                        worklocation_dict['number'] += ' {}'.format(envclass3_json['etablissement']['adresse']['boite'])
+                    set_location(self, worklocation_dict, licence)
+                
                 # if 'natura2000' in envclass3_json['etablissement']:
                 #     natura2000
                 #     if 'site' in envclass3_json['etablissement']:
@@ -171,3 +183,12 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
             'exposant': '',
             'puissance': '',
         }
+
+    def get_work_locations_dict(self):
+        return {
+            'number': '',
+            'street': '',
+            'zipcode': '',
+            'localite': '',
+        }
+

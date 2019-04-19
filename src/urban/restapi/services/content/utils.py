@@ -54,6 +54,24 @@ def set_rubrics(context, data):
         return data
 
 
+def set_location(context, data, licence):
+    """ """
+    catalog = api.portal.get_tool("portal_catalog")
+    if 'street' in data:
+        results = catalog(portal_type='Street', Title=str(data['street']))
+        if len(results) == 1:
+            data['street'] = results[0].getObject().UID()
+            licence['workLocations'].append(data)
+        else:
+            licence['description'] += ("<p>Situation : %s %s %s %s</p>" %
+                                       (
+                                        data['number'],
+                                        data['street'],
+                                        data['zipcode'],
+                                        data['localite']
+                                       ))
+
+
 def file_type(filename):
     with open(filename) as f:
         file_start = f.read(magic_max_len)
