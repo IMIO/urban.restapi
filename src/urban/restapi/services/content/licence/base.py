@@ -18,17 +18,19 @@ class AddLicencePost(add.FolderPost):
     portal_type = ''  # to override in subclasses
 
     def reply(self):
-        licence = json_body(self.request)
-        licence = self.initialize_description_field(licence)
-        licence = self.set_portal_type(licence)
-        licence = self.set_creation_place(licence)
-        licence = self.set_default_foldermanager(licence)
-        licence = self.set_location_uids(licence)
-        licence = self.set_events(licence)
-        licence = self.set_contacts(licence)
-        self.request.set('BODY', json.dumps(licence))
-        result = super(AddLicencePost, self).reply()
-        return result
+        elements = json_body(self.request)
+        result_list = []
+        for element in elements["__elements__"]:
+            licence = self.initialize_description_field(element)
+            licence = self.set_portal_type(licence)
+            licence = self.set_creation_place(licence)
+            licence = self.set_default_foldermanager(licence)
+            licence = self.set_location_uids(licence)
+            licence = self.set_events(licence)
+            licence = self.set_contacts(licence)
+            self.request.set('BODY', json.dumps(licence))
+            result_list.append(super(AddLicencePost, self).reply())
+        return result_list
 
     def set_portal_type(self, data):
         """ """

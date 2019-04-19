@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
+
 import base64
-
-from plone import api
-from plone.restapi.deserializer import json_body
-
-from urban.restapi.exceptions import UndefinedPortalType, DefaultFolderManagerNotFoundError
-from urban.restapi.services.content.esb import base
-from Products.urban.utils import getLicenceFolder
-
 import json
 
+from plone.restapi.deserializer import json_body
+from urban.restapi.services.content.esb import base
 from urban.restapi.services.content.utils import set_rubrics
 
 
@@ -19,9 +14,10 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
 
     def reply(self):
         body = json_body(self.request)
+        archive_title = body['formName']
         json_data = body['json']
         pdf_data = body['pdf']
-        attachments_data = body['attachments']
+        attachment_archive = body['attachmentArchive']
 
         licence = self.get_envclassthree_dict()
 
@@ -33,12 +29,13 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
             attachment_dict['file']['content-type'] = "application/pdf"
             licence['__children__'].append(attachment_dict)
 
-        for attachment in attachments_data:
+        if attachment_archive:
             attachment_dict = self.get_attachment_dict()
-            attachment_dict['file']['data'] = attachment['data'] + "==="
-            attachment_dict['file']['filename'] = attachment['filename']
-            attachment_dict['title'] = attachment['file_reference']
-            attachment_dict['file']['content-type'] = attachment['mimeType']
+            attachment_dict['file']['data'] = attachment_archive['data'] + "==="
+            attachment_dict['file']['filename'] = "{}.{}".format("pieces_jointes_formulaire",
+                                                                 attachment_archive['archiveType'])
+            attachment_dict['title'] = archive_title
+            attachment_dict['file']['content-type'] = attachment_archive['archiveMimeType']
             licence['__children__'].append(attachment_dict)
 
         if json_data:
@@ -53,6 +50,12 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                         rubrics_list.append(item['numRubrique'])
                     licence['rubrics'] = rubrics_list
                     set_rubrics(self, licence)
+                # if 'natura2000' in envclass3_json['etablissement']:
+                #     natura2000
+                #     if 'site' in envclass3_json['etablissement']:
+                #         natura2000Details
+                #     if 'ug' in envclass3_json['etablissement']:
+                #         natura2000Details
             if "demandeur" in envclass3_json:
                 applicant_dict = self.get_applicant_dict()
                 if "identification" in envclass3_json["demandeur"]:
@@ -93,7 +96,21 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                                                                         envclass3_json["demandeur"]["adresse"]['pays'])
                 licence['__children__'].append(applicant_dict)
 
-        import ipdb; ipdb.set_trace() # TODO REMOVE BREAKPOINT
+            if "situation" in envclass3_json:
+                if "parcelles" in envclass3_json["situation"]:
+                    if "item" in envclass3_json["situation"]["parcelles"]:
+                        portionout_list = []
+                        for item in envclass3_json["situation"]["parcelles"]['item']:
+                            portionout_dict = self.get_parcel_dict()
+                            portionout_dict['division'] = item["ins"]["codeDivision"]
+                            portionout_dict['section'] = item["ref"]["section"]
+                            portionout_dict['radical'] = str(int(item["ref"]["numero"]))
+                            portionout_dict['bis'] = item["ref"]["indice"]
+                            portionout_dict['exposant'] = item["ref"]["exposant"]
+                            portionout_dict['puissance'] = str(int(item["ref"]["diviseur"]))
+                            portionout_list.append(portionout_dict)
+                            licence['__children__'].append(portionout_dict)
+
         self.request.set('BODY', json.dumps(licence))
         result = super(AddEsbEnvClassThreePost, self).reply()
         return result
@@ -141,7 +158,6 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
             'city': '',
             'country': '',
         }
-
 
     def get_parcel_dict(self):
         return {

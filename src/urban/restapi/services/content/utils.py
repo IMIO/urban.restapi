@@ -4,6 +4,14 @@ from plone import api
 from Products.urban.utils import getLicenceFolder
 
 
+magic_dict = {
+    "\x1f\x8b\x08": "gz",
+    "\x75\x73\x74\x61\x72": "tar",
+    "\x50\x4b\x03\x04": "zip"
+    }
+magic_max_len = max(len(x) for x in magic_dict)
+
+
 def set_creation_place(context, data):
     """ """
     portal_type = data.get('@type', None)
@@ -44,3 +52,12 @@ def set_rubrics(context, data):
             rubric_uids.append(rubric_brains[0].UID)
         data[u'rubrics'] = rubric_uids
         return data
+
+
+def file_type(filename):
+    with open(filename) as f:
+        file_start = f.read(magic_max_len)
+    for magic, filetype in magic_dict.items():
+        if file_start.startswith(magic):
+            return filetype
+    return "no match"

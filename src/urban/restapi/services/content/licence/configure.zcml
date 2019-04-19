@@ -5,6 +5,14 @@
 
   <plone:service
     method="POST"
+    name="@licence"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".base.AddLicencePost"
+    permission="cmf.AddPortalContent"
+    />
+
+  <plone:service
+    method="POST"
     name="@envclassthree"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     factory=".envclassthree.AddEnvClassThreePost"
