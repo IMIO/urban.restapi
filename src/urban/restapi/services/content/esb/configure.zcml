@@ -5,9 +5,9 @@
 
   <plone:service
     method="POST"
-    name="@contact"
-    for="Products.CMFCore.interfaces.IContentish"
-    factory=".base.AddContactPost"
+    name="@esb_envclassthree"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".envclassthree.AddEsbEnvClassThreePost"
     permission="cmf.AddPortalContent"
     />
 

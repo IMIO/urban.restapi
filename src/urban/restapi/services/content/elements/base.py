@@ -6,16 +6,16 @@ from plone.restapi.deserializer import json_body
 import json
 
 
-class AddContactPost(add.FolderPost):
+class AddElementPost(add.FolderPost):
 
     portal_type = ''  # to override in subclasses
 
     def reply(self):
-        contacts = json_body(self.request)
-        for contact in contacts["__elements__"]:
-            contact = self.set_portal_type(contact)
-            self.request.set('BODY', json.dumps(contact))
-            result = super(AddContactPost, self).reply()
+        elements = json_body(self.request)
+        for element in elements["__elements__"]:
+            element = self.set_portal_type(element)
+            self.request.set('BODY', json.dumps(element))
+            result = super(AddElementPost, self).reply()
         return result
 
     def set_portal_type(self, data):
