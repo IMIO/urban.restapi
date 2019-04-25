@@ -62,12 +62,11 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                                                                         ['boite']))
                     set_location(self, worklocation_dict, licence)
                 
-                # if 'natura2000' in envclass3_json['etablissement']:
-                #     natura2000
-                #     if 'site' in envclass3_json['etablissement']:
-                #         natura2000Details
-                #     if 'ug' in envclass3_json['etablissement']:
-                #         natura2000Details
+                if 'natura2000' in envclass3_json['etablissement']:
+                    if 'site' in envclass3_json['etablissement']['natura2000'] and envclass3_json['etablissement']['natura2000']['site'] != "Sans objet":
+                        licence['natura2000'] = "True"
+                        licence['natura2000Details'] = "<p>{} ; {}</p>".format(envclass3_json['etablissement']['natura2000']['site'],
+                                                                               envclass3_json['etablissement']['natura2000']['ug'])
             if "demandeur" in envclass3_json:
                 applicant_dict = self.get_applicant_dict()
                 if "identification" in envclass3_json["demandeur"]:
