@@ -65,9 +65,9 @@ def set_location(context, data, licence):
         else:
             licence['description'] += ("<p>Situation : %s %s %s %s</p>" %
                                        (
-                                        data['number'],
+                                        str(data['number']),
                                         data['street'],
-                                        data['zipcode'],
+                                        str(data['zipcode']),
                                         data['localite']
                                        ))
 
