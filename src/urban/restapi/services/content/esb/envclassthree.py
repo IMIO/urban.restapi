@@ -20,7 +20,6 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
         attachment_archive = body['attachmentArchive']
 
         licence = self.get_envclassthree_dict()
-
         if pdf_data:
             attachment_dict = self.get_attachment_dict()
             attachment_dict['file']['data'] = pdf_data + "==="
@@ -52,14 +51,15 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                     set_rubrics(self, licence)
                 if 'adresse' in envclass3_json['etablissement']:
                     worklocation_dict = self.get_work_locations_dict()
-                    worklocation_dict['zipcode'] = envclass3_json['etablissement']['adresse']['cp']
+                    worklocation_dict['zipcode'] = str(envclass3_json['etablissement']['adresse']['cp'])
                     worklocation_dict['localite'] = envclass3_json['etablissement']['adresse']['localite']
                     if 'rue' in envclass3_json['etablissement']['adresse']:
                         worklocation_dict['street'] = envclass3_json['etablissement']['adresse']['rue']
                     if 'numero' in envclass3_json['etablissement']['adresse']:
-                        worklocation_dict['number'] = envclass3_json['etablissement']['adresse']['numero']
+                        worklocation_dict['number'] = str(envclass3_json['etablissement']['adresse']['numero'])
                     if 'boite' in envclass3_json['etablissement']['adresse']:
-                        worklocation_dict['number'] += ' {}'.format(envclass3_json['etablissement']['adresse']['boite'])
+                        worklocation_dict['number'] += ' {}'.format(str(envclass3_json['etablissement']['adresse']
+                                                                        ['boite']))
                     set_location(self, worklocation_dict, licence)
                 
                 # if 'natura2000' in envclass3_json['etablissement']:
@@ -94,12 +94,12 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                     if 'rue' in envclass3_json["demandeur"]["adresse"]:
                         applicant_dict['street'] = envclass3_json["demandeur"]["adresse"]['rue']
                     if 'numero' in envclass3_json["demandeur"]["adresse"]:
-                        applicant_dict['number'] = envclass3_json["demandeur"]["adresse"]['numero']
+                        applicant_dict['number'] = str(envclass3_json["demandeur"]["adresse"]['numero'])
                     if 'boite' in envclass3_json["demandeur"]["adresse"]:
                         applicant_dict['street'] = "{} {}".format(applicant_dict['street'],
-                                                                  envclass3_json["demandeur"]["adresse"]['boite'])
+                                                                  str(envclass3_json["demandeur"]["adresse"]['boite']))
                     if 'cp' in envclass3_json["demandeur"]["adresse"]:
-                        applicant_dict['zipcode'] = envclass3_json["demandeur"]["adresse"]['cp']
+                        applicant_dict['zipcode'] = str(envclass3_json["demandeur"]["adresse"]['cp'])
                     if 'localite' in envclass3_json["demandeur"]["adresse"]:
                         applicant_dict['city'] = envclass3_json["demandeur"]["adresse"]['localite']
                     if 'pays' in envclass3_json["demandeur"]["adresse"]:
@@ -114,15 +114,14 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                         portionout_list = []
                         for item in envclass3_json["situation"]["parcelles"]['item']:
                             portionout_dict = self.get_parcel_dict()
-                            portionout_dict['division'] = item["ins"]["codeDivision"]
+                            portionout_dict['division'] = str(item["ins"]["codeDivision"])
                             portionout_dict['section'] = item["ref"]["section"]
                             portionout_dict['radical'] = str(int(item["ref"]["numero"]))
-                            portionout_dict['bis'] = item["ref"]["indice"]
+                            portionout_dict['bis'] = str(item["ref"]["indice"])
                             portionout_dict['exposant'] = item["ref"]["exposant"]
                             portionout_dict['puissance'] = str(int(item["ref"]["diviseur"]))
                             portionout_list.append(portionout_dict)
                             licence['__children__'].append(portionout_dict)
-
         self.request.set('BODY', json.dumps(licence))
         result = super(AddEsbEnvClassThreePost, self).reply()
         return result
