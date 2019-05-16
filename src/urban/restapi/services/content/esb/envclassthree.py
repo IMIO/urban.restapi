@@ -20,6 +20,7 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
         attachment_archive = body['attachmentArchive']
 
         licence = self.get_envclassthree_dict()
+        licence = self.initialize_description_field(licence)
         if pdf_data:
             attachment_dict = self.get_attachment_dict()
             attachment_dict['file']['data'] = pdf_data + "==="
@@ -63,10 +64,15 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                     set_location(self, worklocation_dict, licence)
                 
                 if 'natura2000' in envclass3_json['etablissement']:
-                    if 'site' in envclass3_json['etablissement']['natura2000'] and envclass3_json['etablissement']['natura2000']['site'] != "Sans objet":
-                        licence['natura2000'] = "True"
-                        licence['natura2000Details'] = "<p>{} ; {}</p>".format(envclass3_json['etablissement']['natura2000']['site'],
-                                                                               envclass3_json['etablissement']['natura2000']['ug'])
+                    if 'site' in envclass3_json['etablissement']['natura2000'] and envclass3_json['etablissement']['natura2000']['site']:
+                        details = ""
+                        if 'ug' in envclass3_json['etablissement']['natura2000'] and envclass3_json['etablissement']['natura2000']['ug']:
+                            details = envclass3_json['etablissement']['natura2000']['ug']
+                        licence['description']['data'] += ("<p>Natura2000 : Site %s / détails : %s</p>" %
+                                                           (
+                                                               envclass3_json['etablissement']['natura2000']['site'],
+                                                               details
+                                                           ))
             if "demandeur" in envclass3_json:
                 applicant_dict = self.get_applicant_dict()
                 if "identification" in envclass3_json["demandeur"]:
