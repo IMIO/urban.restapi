@@ -68,7 +68,7 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                         details = ""
                         if 'ug' in envclass3_json['etablissement']['natura2000'] and envclass3_json['etablissement']['natura2000']['ug']:
                             details = envclass3_json['etablissement']['natura2000']['ug']
-                        licence['description']['data'] += ("<p>Natura2000 : Site %s / détails : %s</p>" %
+                        licence['description'] += ("<p>Natura2000 : Site %s / détails : %s</p>" %
                                                            (
                                                                envclass3_json['etablissement']['natura2000']['site'],
                                                                details
