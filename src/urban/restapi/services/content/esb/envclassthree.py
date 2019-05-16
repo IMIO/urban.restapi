@@ -69,10 +69,10 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                         if 'ug' in envclass3_json['etablissement']['natura2000'] and envclass3_json['etablissement']['natura2000']['ug']:
                             details = envclass3_json['etablissement']['natura2000']['ug']
                         licence['description'] += ("<p>Natura2000 : Site %s / détails : %s</p>" %
-                                                           (
-                                                               envclass3_json['etablissement']['natura2000']['site'],
-                                                               details
-                                                           ))
+                                                   (
+                                                       envclass3_json['etablissement']['natura2000']['site'],
+                                                       details
+                                                   ))
             if "demandeur" in envclass3_json:
                 applicant_dict = self.get_applicant_dict()
                 if "identification" in envclass3_json["demandeur"]:
