@@ -20,7 +20,6 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
         attachment_archive = body['attachmentArchive']
 
         licence = self.get_envclassthree_dict()
-        licence = self.initialize_description_field(licence)
         if pdf_data:
             attachment_dict = self.get_attachment_dict()
             attachment_dict['file']['data'] = pdf_data + "==="

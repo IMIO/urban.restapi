@@ -21,14 +21,3 @@ class AddLicencePost(add.FolderPost):
         self.request.set('BODY', json.dumps(licence))
         result = super(AddLicencePost, self).reply()
         return result
-
-    @staticmethod
-    def initialize_description_field(data):
-        if 'description' not in data:
-            data['description'] = {}
-        if 'data' not in data['description']:
-            data['description']['data'] = ""
-        if 'content-type' not in data['description']:
-            data['description']['content-type'] = "text/html"
-
-        return data
