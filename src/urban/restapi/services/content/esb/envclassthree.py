@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import base64
+import datetime
 import json
 
+from plone import api
 from plone.restapi.deserializer import json_body
 from urban.restapi.services.content.esb import base
 from urban.restapi.services.content.utils import set_rubrics, set_location
@@ -125,6 +127,15 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                             portionout_dict['puissance'] = str(int(item["ref"]["diviseur"]))
                             portionout_list.append(portionout_dict)
                             licence['__children__'].append(portionout_dict)
+
+        # Add deposit event with current date
+        deposit_event_dict = self.get_deposit_event_dict()
+        import ipdb; ipdb.set_trace() # TODO REMOVE BREAKPOINT
+        deposit_event_dict['eventDate'] = datetime.datetime.today().strftime('%d/%m/%Y')
+        portal_urban = api.portal.get_tool('portal_urban')
+        deposit_event_dict['event_id'] = "depot-de-la-demande"
+        licence['__children__'].append(deposit_event_dict)
+
         self.request.set('BODY', json.dumps(licence))
         result = super(AddEsbEnvClassThreePost, self).reply()
         return result
@@ -192,5 +203,15 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
             'street': '',
             'zipcode': '',
             'localite': '',
+        }
+
+    def get_deposit_event_dict(self):
+        return {
+            '@type': 'UrbanEvent',
+            'event_id': '',
+            'type': '',
+            'eventDate': '',
+            'decisionDate': '',
+            'decision': '',
         }
 
