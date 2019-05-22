@@ -133,8 +133,15 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
         import ipdb; ipdb.set_trace() # TODO REMOVE BREAKPOINT
         deposit_event_dict['eventDate'] = datetime.datetime.today().strftime('%d/%m/%Y')
         portal_urban = api.portal.get_tool('portal_urban')
-        deposit_event_dict['event_id'] = "depot-de-la-demande"
-        licence['__children__'].append(deposit_event_dict)
+        for licence_config in portal_urban.objectValues('LicenceConfig'):
+            # ignore envclassone as it should have different 'decisions' values
+            if licence_config.id == 'envclassthree':
+                import ipdb;
+                ipdb.set_trace()  # TODO REMOVE BREAKPOINT
+                deposit_event_dict['event_id'] = "depot-de-la-demande"
+                licence['__children__'].append(deposit_event_dict)
+                break
+
 
         self.request.set('BODY', json.dumps(licence))
         result = super(AddEsbEnvClassThreePost, self).reply()
