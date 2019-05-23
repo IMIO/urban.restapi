@@ -58,7 +58,7 @@ def set_location(context, data, licence):
     """ """
     catalog = api.portal.get_tool("portal_catalog")
     if 'street' in data:
-        results = catalog(portal_type='Street', Title=str(data['street']))
+        results = catalog(portal_type='Street', Title=str(data['street'].encode('UTF-8')))
         if len(results) == 1:
             data['street'] = results[0].getObject().UID()
             licence['workLocations'].append(data)
