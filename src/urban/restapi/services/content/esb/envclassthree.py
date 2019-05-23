@@ -128,20 +128,25 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                             portionout_list.append(portionout_dict)
                             licence['__children__'].append(portionout_dict)
 
-        # Add deposit event with current date
+        # Auto-insert deposit event with current date
         deposit_event_dict = self.get_deposit_event_dict()
-        import ipdb; ipdb.set_trace() # TODO REMOVE BREAKPOINT
         deposit_event_dict['eventDate'] = datetime.datetime.today().strftime('%d/%m/%Y')
         portal_urban = api.portal.get_tool('portal_urban')
+        found = False
         for licence_config in portal_urban.objectValues('LicenceConfig'):
-            # ignore envclassone as it should have different 'decisions' values
             if licence_config.id == 'envclassthree':
-                import ipdb;
-                ipdb.set_trace()  # TODO REMOVE BREAKPOINT
-                deposit_event_dict['event_id'] = "depot-de-la-demande"
-                licence['__children__'].append(deposit_event_dict)
+                eventtype_folder = licence_config.urbaneventtypes
+                for event in eventtype_folder.objectValues():
+                    # Looking for the first Deposit event
+                    if "Products.urban.interfaces.IDepositEvent" in event.getEventTypeType():
+                        deposit_event_dict['event_id'] = event.id
+                        deposit_event_dict['title'] = "Dépôt de la demande par le formulaire de la Région Wallonne"
+                        deposit_event_dict['urbaneventtypes'] = event.absolute_url()
+                        licence['__children__'].append(deposit_event_dict)
+                        found = True
+                        break
+            if found:
                 break
-
 
         self.request.set('BODY', json.dumps(licence))
         result = super(AddEsbEnvClassThreePost, self).reply()
