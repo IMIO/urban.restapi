@@ -39,7 +39,10 @@ class LicenceStatus(get.ContentGet):
             if brain.getObject().getReference() == reference:
                 results.append(brain.getObject())
         if len(results) == 1:
-            response = results[0].getObject().review_state
-        self.request.set('BODY', json.dumps(response))
-        result = self.reply()
-        return result
+            workflow_tool = api.portal.get_tool('portal_workflow')
+            workflow_state = workflow_tool.getStatusOf('urban_licence_workflow', results[0])
+            response = {'review_state': workflow_state['review_state'],
+                        'date': str(workflow_state['time'].Date())}
+            return response
+        else:
+            return {'error': 'too many or no result(s)'}
