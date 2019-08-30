@@ -4,8 +4,16 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <plone:service
+    method="GET"
+    name="@esb_urban_licence_status"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".base.LicenceStatus"
+    permission="cmf.AddPortalContent"
+    />
+
+  <plone:service
     method="POST"
-    name="@esb_envclassthree"
+    name="@esb_urban_envclassthree"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     factory=".envclassthree.AddEsbEnvClassThreePost"
     permission="cmf.AddPortalContent"

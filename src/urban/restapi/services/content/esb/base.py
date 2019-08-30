@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from imio.restapi.services import add
+from plone import api
 
 from plone.restapi.deserializer import json_body
+from plone.restapi.services.content import get
 
 
 import json
 
+from Products.urban.interfaces import IGenericLicence
 from urban.restapi.services.content.utils import set_creation_place, set_default_foldermanager
 
 
@@ -20,4 +23,23 @@ class AddLicencePost(add.FolderPost):
         licence = set_default_foldermanager(self, licence)
         self.request.set('BODY', json.dumps(licence))
         result = super(AddLicencePost, self).reply()
+        return result
+
+
+class LicenceStatus(get.ContentGet):
+
+    portal_type = ''
+
+    def reply(self):
+        reference = self.request.ref
+        catalog = api.portal.get_tool('portal_catalog')
+        brains = catalog(object_provides='Products.urban.interfaces.IEnvClassThree')
+        results = []
+        for brain in brains:
+            if brain.getObject().getReference() == reference:
+                results.append(brain.getObject())
+        if len(results) == 1:
+            response = results[0].getObject().review_state
+        self.request.set('BODY', json.dumps(response))
+        result = self.reply()
         return result
