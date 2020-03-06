@@ -6,7 +6,7 @@
   <plone:service
     method="POST"
     name="@elements"
-    for="Products.CMFCore.interfaces.IContentish"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     factory=".base.AddElementPost"
     permission="cmf.AddPortalContent"
     />
