@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+import time
 
 from urban.restapi.exceptions import UndefinedPortalType, DefaultFolderManagerNotFoundError, EnvironmentRubricNotFound
 from plone import api
@@ -79,3 +82,29 @@ def file_type(filename):
         if file_start.startswith(magic):
             return filetype
     return "no match"
+
+
+def quote_parenthesis(s):
+    # We need to quote parentheses when searching text indices
+    if '(' in s:
+        s = s.replace('(', '"("')
+    if ')' in s:
+        s = s.replace(')', '")"')
+    return s
+
+
+def benchmark_decorator(method):
+    def replacement(self, *args, **kwargs):
+        # if not self.benchmarking:
+        #     return method(self, *args, **kwargs)
+        if not self._benchmark.get(method.__name__):
+            self._benchmark[method.__name__] = {'counter': 0, 'elapsed_time': 0}
+        self._benchmark[method.__name__]['counter'] += 1
+        start_time = time.time()
+        returned_value = method(self, *args, **kwargs)
+        self._benchmark[method.__name__]['elapsed_time'] += time.time() - start_time
+        self._benchmark[method.__name__]['average_time'] = \
+            self._benchmark[method.__name__]['elapsed_time'] / self._benchmark[method.__name__]['counter']
+        return returned_value
+
+    return replacement
