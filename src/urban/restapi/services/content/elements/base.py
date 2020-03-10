@@ -135,7 +135,7 @@ class AddElementPost(add.FolderPost):
                 if not ('architect_id' in architect):
                     fullname = u"{0} {1}".format(architect['name1'], architect['name2'])
                     if fullname:
-                        architects = catalog(portal_type='Architect', Title=quote_parenthesis(fullname))
+                        architects = catalog(portal_type='Architect', Title=quote_parenthesis(fullname).replace("-", " "))
                         if len(architects) == 1:
                             architects_args.append(architects[0].getObject().absolute_url())
                         elif len(architects) == 0 and architect['force_create'] == 'True':
