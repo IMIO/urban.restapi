@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import ast
 import base64
 import datetime
 import json
@@ -47,8 +48,11 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                     licence['licenceSubject'] = envclass3_json['etablissement']['description']
                 if 'rubriques' in envclass3_json['etablissement']:
                     rubrics_list = []
-                    for item in envclass3_json['etablissement']['rubriques']['item']:
-                        rubrics_list.append(item['numRubrique'])
+                    if 'numRubrique' in envclass3_json['etablissement']['rubriques']['item']:
+                        rubrics_list.append(envclass3_json['etablissement']['rubriques']['item']['numRubrique'])
+                    else:
+                        for item in envclass3_json['etablissement']['rubriques']['item']:
+                            rubrics_list.append(item['numRubrique'])
                     licence['rubrics'] = rubrics_list
                     set_rubrics(self, licence)
                 if 'adresse' in envclass3_json['etablissement']:
@@ -63,7 +67,7 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                         worklocation_dict['number'] += ' {}'.format(str(envclass3_json['etablissement']['adresse']
                                                                         ['boite']))
                     set_location(self, worklocation_dict, licence)
-                
+
                 if 'natura2000' in envclass3_json['etablissement']:
                     if 'site' in envclass3_json['etablissement']['natura2000'] and envclass3_json['etablissement']['natura2000']['site']:
                         details = ""
@@ -73,6 +77,11 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                                                        envclass3_json['etablissement']['natura2000']['site'],
                                                        details
                                                    ))
+                        licence['natura2000'] = 'True'
+                if 'natura2000Details' in envclass3_json['etablissement']:
+                    licence['natura2000Details'] = (u"<p>Natura2000Details : {}</p>".format(
+                                                   envclass3_json['etablissement']['natura2000Details']
+                                               ))
             if "demandeur" in envclass3_json:
                 applicant_dict = self.get_applicant_dict()
                 if "identification" in envclass3_json["demandeur"]:
@@ -150,6 +159,8 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
 
         self.request.set('BODY', json.dumps(licence))
         result = super(AddEsbEnvClassThreePost, self).reply()
+        # wso2 don't like @
+        result = ast.literal_eval(repr(result).replace('@', ''))
         return result
 
     def get_envclassthree_dict(self):
@@ -160,6 +171,8 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
             'licenceSubject': '',
             'review_state': '',
             'description': '',
+            'natura2000': '',
+            'natura2000Details': '',
             'workLocations': [],
             '__children__': [],
         }
@@ -226,4 +239,3 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
             'decisionDate': '',
             'decision': '',
         }
-
