@@ -12,10 +12,6 @@ from urban.restapi.services.content.utils import quote_parenthesis
 from Products.urban.utils import getLicenceFolder
 
 
-
-
-
-
 class AddElementPost(add.FolderPost):
 
     portal_type = ''  # to override in subclasses
@@ -228,8 +224,24 @@ class AddElementPost(add.FolderPost):
                 if not ('notary_id' in notary):
                     fullname = u"{0} {1}".format(notary['name1'], notary['name2'])
                     if fullname:
-                        notaries = catalog(portal_type='Notary', Title=quote_parenthesis(fullname))
+                        notaries = catalog(portal_type='Notary', Title=quote_parenthesis(fullname).replace("-", " "))
                         if len(notaries) == 1:
+                            notaries_args.append(notaries[0].getObject().absolute_url())
+                        elif len(notaries) == 0 and notary['force_create'] == 'True':
+                            container = api.content.get(path='/urban/notaries')
+                            normalized_id = normalizeString(u"{}_{}".format(notary.get('name1', ""), notary.get('name2', "")))
+                            object_id = container.invokeFactory('Notary',
+                                                                id= normalized_id,
+                                                                name1=notary.get('name1', ""),
+                                                                name2=notary.get('name2', ""),
+                                                                phone=notary.get('phone', ""),
+                                                                gsm=notary.get('gsm', ""),
+                                                                email=notary.get('email', ""),
+                                                                personTitle=notary.get('personTitle', ""),
+                                                                street=notary.get('street', ""),
+                                                                zipcode=str(notary.get('zipcode', "")),
+                                                                city=notary.get('city', ""))
+                            notaries = catalog(portal_type='Notary', id=object_id)
                             notaries_args.append(notaries[0].getObject().absolute_url())
                         else:
                             data['description']['data'] += (u"<p>Notaire : %s %s %s %s %s</p>" %
@@ -245,10 +257,9 @@ class AddElementPost(add.FolderPost):
                 else:
                     notaries_args.append(notary['notary_id'])
 
-            data['notaries'] = notaries_args
+            data['notaryContact'] = notaries_args
 
         return data
-
 
     def set_status(self, licence, result):
         if 'wf_state' in licence and licence['wf_state']:
