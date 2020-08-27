@@ -291,7 +291,7 @@ class AddElementPost(add.FolderPost):
             for rubric in rubrics_args:
                 rubric_brains = catalog(id=rubric, portal_type='EnvironmentRubricTerm')
                 if len(rubric_brains) != 1:
-                    print(u"***Environment Rubric Not Found or too many results: {} ***".format(rubric))
+                    print(u"***Environment Rubric Not Found or too many results: {} ***".format(rubric.encode("ascii", "ignore")))
                 else:
                     rubric_uids.append(rubric_brains[0].UID)
             data[u'rubrics'] = rubric_uids
