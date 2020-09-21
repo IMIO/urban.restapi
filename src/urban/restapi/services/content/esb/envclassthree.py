@@ -131,9 +131,11 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
                             portionout_dict['division'] = str(item["ins"]["codeDivision"])
                             portionout_dict['section'] = item["ref"]["section"]
                             portionout_dict['radical'] = str(int(item["ref"]["numero"]))
-                            portionout_dict['bis'] = str(item["ref"]["indice"])
+                            portionout_dict['bis'] = str(item["ref"]["indice"]) if item["ref"]["indice"] != '00' else ''
                             portionout_dict['exposant'] = item["ref"]["exposant"]
-                            portionout_dict['puissance'] = str(int(item["ref"]["diviseur"]))
+                            portionout_dict['puissance'] = str(int(item["ref"]["diviseur"])) if item["ref"]["diviseur"] != '000' else ''
+                            # Always true from official RW portal form
+                            portionout_dict['is_official'] = 'True'
                             portionout_list.append(portionout_dict)
                             licence['__children__'].append(portionout_dict)
 
@@ -220,6 +222,7 @@ class AddEsbEnvClassThreePost(base.AddLicencePost):
             'bis': '',
             'exposant': '',
             'puissance': '',
+            'is_official': ''
         }
 
     def get_work_locations_dict(self):
