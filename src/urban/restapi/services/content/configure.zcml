@@ -4,5 +4,7 @@
     xmlns:zcml="http://namespaces.zope.org/zcml">
 
   <include package=".licence" />
+  <include package=".elements" />
+  <include package=".esb" />
 
 </configure>

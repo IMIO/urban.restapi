@@ -5,9 +5,41 @@
 
   <plone:service
     method="POST"
+    name="@licence"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".base.AddLicencePost"
+    permission="cmf.AddPortalContent"
+    />
+
+  <plone:service
+    method="POST"
     name="@envclassthree"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     factory=".envclassthree.AddEnvClassThreePost"
+    permission="cmf.AddPortalContent"
+    />
+
+  <plone:service
+    method="POST"
+    name="@buildlicence"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".buildlicence.AddBuildLicencePost"
+    permission="cmf.AddPortalContent"
+    />
+
+  <plone:service
+    method="POST"
+    name="@codt_buildlicence"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".codt_buildlicence.AddCodtBuildLicencePost"
+    permission="cmf.AddPortalContent"
+    />
+
+  <plone:service
+    method="POST"
+    name="@codt_parceloutlicence"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    factory=".codt_parceloutlicence.AddCodtParcelOutLicencePost"
     permission="cmf.AddPortalContent"
     />
 
