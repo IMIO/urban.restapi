@@ -29,7 +29,9 @@ class AddElementPost(add.FolderPost):
             licence = self.set_contacts(licence)
             self.request.set('BODY', json.dumps(licence))
             result = super(AddElementPost, self).reply()
+            # post-treatment
             self.set_status(licence, result)
+            self.set_location_number_format(licence, result)
         return result
 
     def set_portal_type(self, data):
@@ -279,6 +281,19 @@ class AddElementPost(add.FolderPost):
                 print("***no valid transition***")
                 # api.content.transition(licence_object, 'nonapplicable')
         return licence
+
+    def set_location_number_format(self, licence, result):
+        if 'workLocations' in licence and licence['workLocations']:
+            site = api.portal.getSite()
+            licence_object = site.reference_catalog.lookupObject(result['UID'])
+            wl = licence_object.getWorkLocations()
+            wll = list(wl)
+            new_wll = []
+            for wl in wll:
+                if wl['number'] and isinstance(wl['number'], unicode):
+                    wl['number'] = wl['number'].encode("utf-8")
+                new_wll.append(wl)
+            licence_object.setWorkLocations(tuple(new_wll))
 
     def set_rubrics(self, data):
         """ """
