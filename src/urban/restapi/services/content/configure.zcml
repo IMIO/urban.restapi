@@ -7,5 +7,6 @@
   <include package=".elements" />
   <include package=".esb" />
   <include package=".address" />
+  <include package=".parcel" />
 
 </configure>
