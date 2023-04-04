@@ -12,7 +12,7 @@ class SearchParcel(Service):
         """
         End point to search cadastral parcel
         callable with 'GET' and '@parcel'
-        Must add minimum one query parameters from this list :
+        Must add minimum one query parameters from this list as key :
             - division
             - section
             - radical
