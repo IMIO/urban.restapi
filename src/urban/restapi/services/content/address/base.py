@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from eea.faceted.vocabularies.autocomplete import IAutocompleteSuggest
 from plone.restapi.services import Service
 from zope.component import getMultiAdapter
-from eea.faceted.vocabularies.autocomplete import IAutocompleteSuggest
+
 
 class SearchAdress(Service):
 
-    portal_type = ''  # to override in subclasses
+    portal_type = ""  # to override in subclasses
 
     def reply(self):
         """
@@ -20,15 +21,12 @@ class SearchAdress(Service):
         adapter = getMultiAdapter(
             (self.context, self.request),
             IAutocompleteSuggest,
-            name="sreets-autocomplete-suggest"
+            name="sreets-autocomplete-suggest",
         )
 
         items = [
-            {'name': street["label"], 'uid': street["value"]}
+            {"name": street["label"], "uid": street["value"]}
             for street in adapter.compute_suggestions()
         ]
 
-        return {
-            "items": items,
-            "items_total": len(items)
-        }
+        return {"items": items, "items_total": len(items)}
