@@ -13,11 +13,15 @@ class SearchAdress(Service):
         """
         End point to search street
         callable with 'GET' and '@address'
-        Must add minimum one character as query parameters
+        Must add minimum one character as query parameters with the key 'term'
 
         return an object with a list of object compose of uid and name of the street and
             the count of item return
         """
+
+        if not self.request.get('term'):
+            raise Exception('Must provide a query parameter with the key "term"')
+
         adapter = getMultiAdapter(
             (self.context, self.request),
             IAutocompleteSuggest,
