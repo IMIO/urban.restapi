@@ -34,14 +34,14 @@ class SearchParcel(Service):
         }
 
     def _serialize_parcel(self, parcels):
-        response = []
+        serialized_parcels = []
         for parcel in parcels:
             attributes = self._get_attributes(parcel)
-            response.append({
+            serialized_parcels.append({
                 attr: getattr(parcel, attr)
                 for attr in attributes
             })
-        return response
+        return serialized_parcels
 
     def _get_attributes(self, parcel):
         attributes = dir(parcel)
