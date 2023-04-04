@@ -12,7 +12,7 @@ class SearchAdress(Service):
         """
         End point to search street
         callable with 'GET' and '@address'
-        Must add minimum one charachter as querry parameters
+        Must add minimum one character as query parameters
 
         return an object with a list of object compose of uid and name of the street and
             the count of item return
