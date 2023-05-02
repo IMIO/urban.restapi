@@ -19,8 +19,11 @@ class SearchAdress(Service):
             the count of item return
         """
 
-        if not self.request.get('term'):
+        if not self.request.get("term"):
             raise Exception('Must provide a query parameter with the key "term"')
+
+        self._fix_term("(")
+        self._fix_term(")")
 
         adapter = getMultiAdapter(
             (self.context, self.request),
@@ -34,3 +37,12 @@ class SearchAdress(Service):
         ]
 
         return {"items": items, "items_total": len(items)}
+
+    def _fix_term(self, character):
+        term = self.request.get("term")
+
+        if character in term:
+            joiner = '"{}"'.format(character)
+            term = joiner.join(term.split(character))
+
+        self.request.set("term", term)
