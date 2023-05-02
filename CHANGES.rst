@@ -5,7 +5,7 @@ Changelog
 1.0a2 (unreleased)
 ------------------
 
-- Fix adress query with parenthesis [URB-2696]
+- Fix address query with parenthesis [URB-2696]
   [jchandelle]
 
 
