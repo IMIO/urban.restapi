@@ -108,3 +108,16 @@ def benchmark_decorator(method):
         return returned_value
 
     return replacement
+
+
+def get_config_object(path):
+    """
+    Get a config object from a path
+
+    :param str path: Path slash separeted from root of portal_urban to the config
+    :return: Config object
+    :rtype: LicenceConfig
+    """
+    portal_urban = api.portal.get_tool('portal_urban')
+
+    return portal_urban.restrictedTraverse(path)
