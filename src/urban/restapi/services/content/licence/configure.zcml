@@ -43,4 +43,11 @@
     permission="cmf.AddPortalContent"
     />
 
+  <plone:service
+    method="POST"
+    for="Products.urban.interfaces.IGenericLicence"
+    factory=".base.AddLicenceChildPost"
+    permission="cmf.AddPortalContent"
+    />
+
 </configure>

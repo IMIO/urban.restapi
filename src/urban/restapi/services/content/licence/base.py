@@ -7,6 +7,7 @@ from plone import api
 from plone.restapi.deserializer import json_body
 
 from urban.restapi.exceptions import UndefinedPortalType, DefaultFolderManagerNotFoundError
+from urban.restapi.services.content.utils import get_config_object
 
 from Products.urban.utils import getLicenceFolder
 
@@ -208,5 +209,23 @@ class AddLicencePost(add.FolderPost):
             data['description']['data'] = ""
         if 'content-type' not in data['description']:
             data['description']['content-type'] = "text/html"
+
+        return data
+
+
+class AddLicenceChildPost(add.FolderPost):
+    def prepare_data(self, data):
+        data = super(AddLicenceChildPost, self).prepare_data(data)
+
+        if u"urbaneventtypes" in data:
+            try:
+                config = get_config_object(
+                    "{0}/eventconfigs/{1}".format(
+                        self.context.portal_type.lower(), data["urbaneventtypes"]
+                    )
+                )
+                data["urbaneventtypes"] = config.UID()
+            except KeyError:
+                return data
 
         return data
