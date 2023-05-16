@@ -5,6 +5,9 @@ Changelog
 1.0a2 (unreleased)
 ------------------
 
+- Fix multiresult in street search with exact match [URB-2696]
+  [jchandelle]
+
 - Fix POST endpoint for event creation [URB-2730]
   [jchandelle]
 
