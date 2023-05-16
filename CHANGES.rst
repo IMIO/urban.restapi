@@ -5,6 +5,9 @@ Changelog
 1.0a2 (unreleased)
 ------------------
 
+- Fix POST endpoint for event creation [URB-2730]
+  [jchandelle]
+
 - Add utils for getting config object from a path
   [jchandelle]
 
