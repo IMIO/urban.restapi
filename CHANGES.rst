@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-1.0a2 (unreleased)
-------------------
+1.0.0b1 (2023-06-29)
+--------------------
 
 - Fix POST endpoint for event creation [URB-2730]
   [jchandelle]
