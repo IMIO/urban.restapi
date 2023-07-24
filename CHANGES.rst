@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b2 (unreleased)
+1.0.0b2 (2023-07-24)
 --------------------
 
 - Fix multiresult in street search with exact match [URB-2696]
