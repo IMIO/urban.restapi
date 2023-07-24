@@ -14,7 +14,8 @@ class SearchAdress(Service):
         End point to search street
         callable with 'GET' and '@address'
         Must add minimum one character as query parameters
-
+        You can provide a 'match' parameter to force the exact match on the result
+        
         return an object with a list of object compose of uid and name of the street and
             the count of item return
         """
@@ -33,7 +34,7 @@ class SearchAdress(Service):
 
         items = [
             {"name": street["label"], "uid": street["value"]}
-            for street in adapter.compute_suggestions()
+            for street in adapter.compute_suggestions(exact_match=self._get_perfect_match())
         ]
 
         return {"items": items, "items_total": len(items)}
@@ -46,3 +47,10 @@ class SearchAdress(Service):
             term = joiner.join(term.split(character))
 
         self.request.set("term", term)
+
+        
+    def _get_perfect_match(self):
+        match = self.request.get("match",False)
+        if match:
+            return match.lower() in ['true', '1', 't', 'y', 'yes']
+        return False
