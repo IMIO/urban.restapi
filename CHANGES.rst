@@ -5,6 +5,9 @@ Changelog
 1.0.0b3 (unreleased)
 --------------------
 
+- Add imio.restapi dependency
+  [jchandelle]
+
 - Adapt street retrieval key [SUP-31682]
   [jchandelle]
 

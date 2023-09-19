@@ -44,6 +44,7 @@ setup(
         'Products.GenericSetup',
         'setuptools',
         'z3c.jbot',
+        'imio.restapi'
     ],
     extras_require={
         'test': [
