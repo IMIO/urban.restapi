@@ -5,7 +5,8 @@ Changelog
 1.0.0b3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Add imio.restapi dependency
+  [jchandelle]
 
 
 1.0.0b2 (2023-07-24)
