@@ -5,7 +5,8 @@ Changelog
 1.0.0b3 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Adapt street retrieval key [SUP-31682]
+  [jchandelle]
 
 
 1.0.0b2 (2023-07-24)

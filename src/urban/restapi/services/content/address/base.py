@@ -33,7 +33,7 @@ class SearchAdress(Service):
         )
 
         items = [
-            {"name": street["label"], "uid": street["value"]}
+            {"name": street["text"], "uid": street["id"]}
             for street in adapter.compute_suggestions(exact_match=self._get_perfect_match())
         ]
 
