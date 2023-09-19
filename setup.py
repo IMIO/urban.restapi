@@ -14,7 +14,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='urban.restapi',
-    version='1.0.0b3.dev0',
+    version='1.0.0b3',
     description="specific urban restapi for interoperability",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers

@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b3 (unreleased)
+1.0.0b3 (2023-09-19)
 --------------------
 
 - Add imio.restapi dependency
