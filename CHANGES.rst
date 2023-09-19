@@ -8,6 +8,9 @@ Changelog
 - Add imio.restapi dependency
   [jchandelle]
 
+- Adapt street retrieval key [SUP-31682]
+  [jchandelle]
+
 
 1.0.0b2 (2023-07-24)
 --------------------
