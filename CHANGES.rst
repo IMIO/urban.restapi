@@ -5,7 +5,8 @@ Changelog
 1.0.0b4 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fix street search to include disable street
+  [jchandelle]
 
 
 1.0.0b3 (2023-09-19)

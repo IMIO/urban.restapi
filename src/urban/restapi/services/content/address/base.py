@@ -15,7 +15,8 @@ class SearchAdress(Service):
         callable with 'GET' and '@address'
         Must add minimum one character as query parameters
         You can provide a 'match' parameter to force the exact match on the result
-        
+        You can provide a 'include_disable' parameter to expand search in disable streets
+
         return an object with a list of object compose of uid and name of the street and
             the count of item return
         """
@@ -34,7 +35,10 @@ class SearchAdress(Service):
 
         items = [
             {"name": street["text"], "uid": street["id"]}
-            for street in adapter.compute_suggestions(exact_match=self._get_perfect_match())
+            for street in adapter.compute_suggestions(
+                exact_match=self._get_bool_parameter("match"),
+                include_disable=self._get_bool_parameter("include_disable")
+            )
         ]
 
         return {"items": items, "items_total": len(items)}
@@ -48,9 +52,8 @@ class SearchAdress(Service):
 
         self.request.set("term", term)
 
-        
-    def _get_perfect_match(self):
-        match = self.request.get("match",False)
+    def _get_bool_parameter(self, parameter):
+        match = self.request.get(parameter, False)
         if match:
             return match.lower() in ['true', '1', 't', 'y', 'yes']
         return False
