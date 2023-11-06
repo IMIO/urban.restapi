@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b4 (unreleased)
+1.0.0b4 (2023-11-06)
 --------------------
 
 - Fix street search to include disable street
