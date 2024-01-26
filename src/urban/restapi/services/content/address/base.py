@@ -3,26 +3,15 @@
 from eea.faceted.vocabularies.autocomplete import IAutocompleteSuggest
 from plone.restapi.services import Service
 from zope.component import getMultiAdapter
-
+from plone import api
 
 class SearchAdress(Service):
 
     portal_type = ""  # to override in subclasses
 
-    def reply(self):
-        """
-        End point to search street
-        callable with 'GET' and '@address'
-        Must add minimum one character as query parameters
-        You can provide a 'match' parameter to force the exact match on the result
-        You can provide a 'include_disable' parameter to expand search in disable streets
-
-        return an object with a list of object compose of uid and name of the street and
-            the count of item return
-        """
-
+    def search_term(self):
         if not self.request.get("term"):
-            raise Exception('Must provide a query parameter with the key "term"')
+            return None
 
         self._fix_term("(")
         self._fix_term(")")
@@ -40,6 +29,45 @@ class SearchAdress(Service):
                 include_disable=self._get_bool_parameter("include_disable")
             )
         ]
+
+        return items
+        
+    def street_code(self):
+        street_code = self.request.get("street_code", None)
+        if not street_code:
+            return None
+
+        items = [
+            {"name": street.Title, "uid": street.UID}
+            for street in api.content.find(getStreetCode= [int(street_code)])
+        ]
+
+        return items
+
+
+    def reply(self):
+        """
+        End point to search street
+        callable with 'GET' and '@address'
+        Must add minimum one character as query parameters with the "term" key 
+        or the street code with the "street_code" key
+        You can provide a 'match' parameter to force the exact match on the result
+        You can provide a 'include_disable' parameter to expand search in disable streets
+
+        return an object with a list of object compose of uid and name of the street and
+            the count of item return
+        """
+
+        street_term = self.search_term()
+        street_code = self.street_code()
+
+        if not (street_term or street_code):
+            raise Exception('Must provide at least one query parameter with either the key "term" or "street_code"')
+
+        items = street_term
+        
+        if street_code:
+            items = street_code
 
         return {"items": items, "items_total": len(items)}
 
