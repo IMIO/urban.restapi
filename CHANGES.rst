@@ -5,7 +5,8 @@ Changelog
 1.0.0b5 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Add possibility to search street with code in @address
+  [jchandelle]
 
 
 1.0.0b4 (2023-11-06)
