@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b5 (unreleased)
+1.0.0b5 (2024-02-05)
 --------------------
 
 - Add possibility to search street with code in @address
