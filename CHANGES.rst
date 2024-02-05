@@ -5,7 +5,7 @@ Changelog
 1.0.0b5 (unreleased)
 --------------------
 
-- Add possiblity to search street with code in @address
+- Add possibility to search street with code in @address
   [jchandelle]
 
 
