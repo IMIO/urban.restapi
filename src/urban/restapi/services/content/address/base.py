@@ -61,15 +61,16 @@ class SearchAdress(Service):
         street_term = self.search_term()
         street_code = self.street_code()
 
-        if not (street_term or street_code):
-            raise Exception('Must provide at least one query parameter with either the key "term" or "street_code"')
+        if street_term is None and street_code is None:
+            raise Exception(
+                'Must provide at least one query parameter '
+                'with either the key "term" or "street_code"'
+            )
 
-        items = street_term
-        
-        if street_code:
-            items = street_code
-
-        return {"items": items, "items_total": len(items)}
+        return {
+            "items": street_code or street_term,
+            "items_total": len(street_code or street_term)
+        }
 
     def _fix_term(self, character):
         term = self.request.get("term")
