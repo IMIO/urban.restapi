@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.0.0b6 (unreleased)
+1.0.0b6 (2024-02-08)
 --------------------
 
 - Fix endpoint address for fail street code search [MURBFMAA-20]
