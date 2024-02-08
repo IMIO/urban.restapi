@@ -68,8 +68,8 @@ class SearchAdress(Service):
             )
 
         return {
-            "items": street_code or street_term,
-            "items_total": len(street_code or street_term)
+            "items": street_code or street_term or [],
+            "items_total": len(street_code or street_term or [])
         }
 
     def _fix_term(self, character):

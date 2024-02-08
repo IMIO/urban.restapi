@@ -5,7 +5,8 @@ Changelog
 1.0.0b6 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Fix endpoint address for fail street code search [MURBFMAA-20]
+  [jchandelle]
 
 
 1.0.0b5 (2024-02-05)
